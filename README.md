@@ -212,7 +212,7 @@ job-market-skills-analyzer/
 5. The same workflow publishes the **dbt docs** to GitHub Pages (*Settings → Pages → Source: GitHub Actions*).
 
 ## 🤖 Optional: Cortex AI skill extraction
-`models/marts/ai/` asks an LLM inside Snowflake (`SNOWFLAKE.CORTEX.COMPLETE`, default `llama3.1-8b`) to list the
+`models/marts/ai/` asks an LLM inside Snowflake (Cortex `AI_COMPLETE`, default `llama3.1-8b`) to list the
 skills in the 300 newest real ads, then compares its answers with the regex dictionary:
 ```powershell
 cd dbt_project
@@ -222,8 +222,9 @@ cd dbt_project
 select * from marts.ai_skill_gaps where not in_dictionary order by ads_mentioning desc;  -- skills to add to skills.csv
 select * from marts.ai_skill_gaps where in_dictionary order by regex_agreement;         -- where the regex misses
 ```
-Off by default: it costs a few credits per run and needs Cortex in your account's region
-(or cross-region inference enabled). Change the model or sample size with
+Off by default: it costs a few credits per run, needs Cortex in your account's region
+(or cross-region inference enabled), and **does not work on Snowflake free-trial accounts**
+(AI functions are blocked until the account is upgraded). Change the model or sample size with
 `--vars "{enable_cortex: true, cortex_model: 'mistral-large2', cortex_sample_size: 100}"`.
 
 ## 🌱 Ideas to extend

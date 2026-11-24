@@ -25,7 +25,7 @@ answers as (
 
     select
         job_id,
-        snowflake.cortex.complete(
+        ai_complete(
             '{{ var("cortex_model", "llama3.1-8b") }}',
             'List the technical skills, tools, programming languages and spoken languages that this job ad asks for. '
             || 'Answer ONLY with a JSON array of short skill names in English, for example ["SQL", "Python", "Swedish"]. '
