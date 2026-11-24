@@ -10,8 +10,10 @@ Two data sources, switchable in the dashboard:
 - **🌍 Sample data** — 12,000 synthetic postings across 8 countries (India, Sweden, Norway,
   Denmark, Germany, Netherlands, UK, US) with salaries, for country and salary comparisons.
 
-**🔗 Live dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/
-— rebuilt every morning by the daily refresh.
+**🚀 Live dashboard:** https://job-market-skills-analyzer.streamlit.app
+— real Swedish job ads, refreshed every morning.
+
+**📚 dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/
 
 | Your learning path | Jobs that match you |
 |---|---|
@@ -231,8 +233,6 @@ Off by default: it costs a few credits per run, needs Cortex in your account's r
 - **Snapshots (SCD2)**: keep ads after they close, to build longer trends.
 - **Adzuna API** for real ads in other countries (free key required).
 - **Masking policy** on company names for a "privacy" demo.
-- Host the Streamlit dashboard on Streamlit Community Cloud (with a read-only `REPORTER` login as its secret).
-
 ## 📝 Resume bullet points
 - Built an end-to-end ELT pipeline on **Snowflake** and **dbt** that ingests ~2,700 live Swedish job ads daily from a public REST API, identifying in-demand skills and trends by role and city.
 - Designed a layered dbt project (staging → intermediate → marts) with an **incremental** bilingual (Swedish/English) skill-extraction model, custom macros, and 70+ automated data tests.
