@@ -1,0 +1,7 @@
+# Packages for the hosted dashboard (Streamlit Community Cloud reads this file
+# because it sits next to streamlit_app.py). No dbt needed here.
+streamlit>=1.40
+snowflake-snowpark-python>=1.25
+snowflake-connector-python>=3.12
+altair>=5.0
+pandas>=2.0
