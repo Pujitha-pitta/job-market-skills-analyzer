@@ -1,0 +1,40 @@
+# CI: runs on every push and pull request.
+# Checks that the Python code is valid, the data generator and JobTech fetcher
+# work, and the dbt project parses (no Snowflake login needed).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Python files compile
+        run: python -m compileall -q data_generator ingestion dashboard run_pipeline.py dbt_project/run_dbt.py
+
+      - name: Data generator smoke test
+        run: python data_generator/generate_job_postings.py --rows 500 --out /tmp/sample.csv
+
+      - name: JobTech fetcher smoke test (50 real ads)
+        run: python ingestion/fetch_jobtech.py --max-ads 50 --out /tmp/jobtech.csv
+
+      - name: dbt parse (models, tests, macros, seeds are valid)
+        working-directory: dbt_project
+        env:
+          SNOWFLAKE_ACCOUNT: ci-placeholder
+          SNOWFLAKE_USER: ci-placeholder
+          SNOWFLAKE_PASSWORD: ci-placeholder
+          DBT_ENGINE_MANAGE_STATE: "false"
+        run: dbt parse --profiles-dir .

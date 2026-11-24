@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: int_job_skills
+    description: One row per skill mentioned in a job posting (job ↔ skill bridge).
+    columns:
+      - name: job_skill_id
+        data_tests: [unique, not_null]
+      - name: job_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_job_postings')
+                field: job_id
+      - name: skill_name
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('skills')
+                field: skill_name
+
+  - name: int_jobs_enriched
+    description: Job postings with the number and list of skills they mention.
+    columns:
+      - name: job_id
+        data_tests: [unique, not_null]

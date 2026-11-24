@@ -1,0 +1,50 @@
+version: 2
+
+seeds:
+  - name: skills
+    description: >
+      Skill dictionary used to extract skills from job descriptions.
+      `search_pattern` is a regex fragment (lower case); the macro
+      `text_contains_skill` wraps it with word boundaries.
+      Add a row here to start tracking a new skill.
+    columns:
+      - name: skill_name
+        data_tests: [unique, not_null]
+      - name: skill_category
+        data_tests: [not_null]
+      - name: search_pattern
+        data_tests: [unique, not_null]
+
+  - name: city_mapping
+    description: Maps the many spellings of a location to one clean city name and its country.
+    columns:
+      - name: raw_location
+        description: Lower-case, trimmed location text as it appears in raw data.
+        data_tests: [unique, not_null]
+      - name: city
+        data_tests: [not_null]
+      - name: country
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('countries')
+                field: country
+
+  - name: countries
+    description: >
+      One row per country: its currency, a fixed EUR exchange rate (approximate —
+      update it for current rates) and how salaries are usually quoted there
+      (LPA in India, per month in the Nordics, per year elsewhere).
+    columns:
+      - name: country
+        data_tests: [unique, not_null]
+      - name: currency
+        data_tests: [not_null]
+      - name: eur_per_unit
+        data_tests: [not_null]
+      - name: salary_shown_as
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['LPA', 'month', 'year']

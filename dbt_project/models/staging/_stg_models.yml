@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_job_postings
+    description: One cleaned, de-duplicated row per job posting.
+    columns:
+      - name: job_id
+        description: Unique id of the posting.
+        data_tests: [unique, not_null]
+      - name: role_family
+        description: Clean role group derived from the job title (macro classify_role).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Data Analyst', 'Data Engineer', 'Analytics Engineer', 'Data Scientist',
+                         'ML Engineer', 'Backend Developer', 'Frontend Developer',
+                         'Full Stack Developer', 'QA / Test Engineer', 'DevOps / Cloud Engineer',
+                         'Cyber Security', 'IT Project Manager', 'Architect', 'UX / Design',
+                         'Embedded Developer', 'IT Support & Infrastructure', 'Other']
+      - name: country
+        description: Country of the job (via seed city_mapping). 'Unknown' means a new spelling needs adding to the seed.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('countries')
+                field: country
+      - name: city
+        description: Standardised city (via seed city_mapping). 'Remote' for remote jobs.
+        data_tests: [not_null]
+      - name: work_mode
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Remote', 'Hybrid', 'On-site']
+      - name: experience_band
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Fresher (0-1 yrs)', 'Junior (2-3 yrs)', 'Mid (4-6 yrs)', 'Senior (7+ yrs)', 'Unknown']
+      - name: salary_mid_yearly
+        description: Midpoint of the salary range, per year, in the local currency. Null when not disclosed.
+      - name: salary_mid_eur
+        description: salary_mid_yearly converted to EUR (fixed rates in seeds/countries.csv) for cross-country comparison.
+      - name: data_source
+        description: "'Real' = live ads from Arbetsförmedlingen (JobTech API), 'Sample' = synthetic data."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Real', 'Sample']
+      - name: posted_date
+        description: Date the job was posted (parsed from two raw formats).
+        data_tests: [not_null]

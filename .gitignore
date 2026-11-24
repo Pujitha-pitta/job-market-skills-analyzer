@@ -1,0 +1,22 @@
+# secrets
+dashboard/.streamlit/secrets.toml
+.streamlit/secrets.toml
+.env
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+logs/
+
+# python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# generated data (re-create with run_pipeline.py)
+data/*.csv
+
+# dbt per-machine id
+dbt_project/.user.yml

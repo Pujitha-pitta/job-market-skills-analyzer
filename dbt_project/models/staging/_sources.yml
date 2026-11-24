@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw job postings loaded from CSV by ingestion/load_to_snowflake.py
+    database: JOB_MARKET_DB
+    schema: RAW
+    tables:
+      - name: job_postings
+        description: One row per scraped posting. All columns are VARCHAR; duplicates are possible.
+        config:
+          loaded_at_field: _loaded_at
+        columns:
+          - name: job_id
+            data_tests: [not_null]
+          - name: job_description
+            data_tests: [not_null]

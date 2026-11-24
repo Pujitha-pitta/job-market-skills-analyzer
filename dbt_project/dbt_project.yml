@@ -1,0 +1,50 @@
+name: job_market_analyzer
+version: "1.0.0"
+config-version: 2
+profile: job_market_analyzer
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+# After every run, let the read-only REPORTER role see the marts schema.
+on-run-end:
+  - "grant usage on schema {{ target.database }}.marts to role reporter"
+
+models:
+  job_market_analyzer:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
+      +grants:
+        select: ["reporter"]
+
+seeds:
+  job_market_analyzer:
+    +schema: seeds
+    skills:
+      +column_types:
+        skill_name: varchar
+        skill_category: varchar
+        search_pattern: varchar
+    city_mapping:
+      +column_types:
+        raw_location: varchar
+        city: varchar
+        country: varchar
+    countries:
+      +column_types:
+        country: varchar
+        currency: varchar
+        eur_per_unit: number(12, 6)
+        salary_shown_as: varchar

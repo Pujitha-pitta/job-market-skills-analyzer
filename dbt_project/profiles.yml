@@ -1,0 +1,25 @@
+# dbt looks for profiles.yml in the current folder first, so run dbt from
+# inside dbt_project/. No secrets live here — they come from env variables.
+#
+#   $env:SNOWFLAKE_ACCOUNT  = "abc12345.ap-south-1"   # or orgname-accountname
+#   $env:SNOWFLAKE_USER     = "your_user"
+#   $env:SNOWFLAKE_PASSWORD = "your_password_or_PAT"
+#
+# If your account enforces MFA, create a Programmatic Access Token in Snowsight
+# (your profile » Settings » Authentication) and use it as SNOWFLAKE_PASSWORD,
+# or replace `password` with `authenticator: externalbrowser`.
+
+job_market_analyzer:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: TRANSFORMER
+      warehouse: TRANSFORM_WH
+      database: JOB_MARKET_DB
+      schema: analytics
+      threads: 4
+      client_session_keep_alive: false

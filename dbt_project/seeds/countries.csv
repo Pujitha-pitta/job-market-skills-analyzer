@@ -1,0 +1,9 @@
+country,currency,eur_per_unit,salary_shown_as
+India,INR,0.0103,LPA
+Sweden,SEK,0.090,month
+Norway,NOK,0.085,month
+Denmark,DKK,0.134,month
+Germany,EUR,1.0,year
+Netherlands,EUR,1.0,year
+United Kingdom,GBP,1.17,year
+United States,USD,0.88,year

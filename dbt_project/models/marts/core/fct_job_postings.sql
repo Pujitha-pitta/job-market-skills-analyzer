@@ -1,0 +1,30 @@
+-- Fact table: one row per job posting (grain = job_id)
+
+select
+    job_id,
+    job_title,
+    role_family,
+    title_seniority,
+    company_name,
+    country,
+    city,
+    work_mode,
+    experience_raw,
+    min_experience_years,
+    max_experience_years,
+    experience_band,
+    currency,
+    salary_shown_as,
+    salary_min_yearly,
+    salary_max_yearly,
+    salary_mid_yearly,
+    salary_mid_eur,
+    is_salary_disclosed,
+    posted_date,
+    posted_month,
+    skill_count,
+    skills_list,
+    source_site,
+    data_source,
+    job_url
+from {{ ref('int_jobs_enriched') }}

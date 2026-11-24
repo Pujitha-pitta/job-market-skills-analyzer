@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  # ---------------- core ----------------
+  - name: fct_job_postings
+    description: One row per job posting with clean attributes, salary (local + EUR) and skill counts.
+    columns:
+      - name: job_id
+        data_tests: [unique, not_null]
+      - name: role_family
+        data_tests: [not_null]
+      - name: country
+        data_tests: [not_null]
+      - name: data_source
+        description: "'Real' (live Swedish ads, JobTech API) or 'Sample' (synthetic, 8 countries)."
+        data_tests: [not_null]
+      - name: job_url
+        description: Link to the original ad on Platsbanken (real ads only).
+      - name: skill_count
+        description: Number of dictionary skills found in the description.
+      - name: salary_mid_yearly
+        description: Yearly salary midpoint in the local currency (see `currency`).
+      - name: salary_mid_eur
+        description: Same salary in EUR, for comparing countries.
+
+  - name: fct_job_skills
+    description: One row per (job, skill) with job attributes for easy filtering.
+    columns:
+      - name: job_skill_id
+        data_tests: [unique, not_null]
+      - name: skill_name
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_skills')
+                field: skill_name
+
+  - name: dim_skills
+    description: Skill dictionary with overall popularity.
+    columns:
+      - name: skill_name
+        data_tests: [unique, not_null]
+
+  # ---------------- career insights ----------------
+  - name: mart_skill_demand
+    description: Share of postings mentioning each skill, per country and role (with 'All Countries' / 'All Roles').
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, country, role_family, skill_name]
+    columns:
+      - name: share_of_postings
+        description: postings_with_skill / total_postings for that country + role (0-1).
+
+  - name: mart_salary_by_skill
+    description: Salary with vs. without a skill, per country and role. Only skills with 20+ salaried postings.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, country, role_family, skill_name]
+    columns:
+      - name: salary_premium_pct
+        description: How much higher (%) the average salary is when the skill is mentioned.
+      - name: currency
+        description: Currency of the salary columns (EUR for 'All Countries').
+
+  - name: mart_fresher_skills
+    description: Skill demand for postings that need 0-1 years of experience, per country and role.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, country, role_family, skill_name]
+
+  - name: mart_skill_trends
+    description: Monthly share of postings mentioning each skill, per country and role.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, posted_month, country, role_family, skill_name]
+
+  - name: mart_skill_pairs
+    description: Skills that are asked for together, with co-occurrence lift, per country and role.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, country, role_family, skill_a, skill_b]
+
+  - name: mart_city_overview
+    description: Postings, salary and remote share per country, city and role.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [data_source, country, city, role_family]

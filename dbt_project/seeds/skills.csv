@@ -1,0 +1,76 @@
+skill_name,skill_category,search_pattern
+SQL,Programming Language,sql
+Python,Programming Language,python
+Java,Programming Language,java
+JavaScript,Programming Language,javascript
+TypeScript,Programming Language,typescript
+Golang,Programming Language,golang
+Scala,Programming Language,scala
+C++,Programming Language,c\+\+
+Excel,Analytics Tool,excel
+Power BI,BI & Visualization,power ?bi
+Tableau,BI & Visualization,tableau
+Looker,BI & Visualization,looker
+Data Visualization,BI & Visualization,data visuali[sz]ation|datavisualisering
+Snowflake,Data Warehouse,snowflake
+BigQuery,Data Warehouse,big ?query
+Redshift,Data Warehouse,redshift
+Databricks,Data Platform,databricks
+dbt,Data Transformation,dbt
+ETL,Data Transformation,etl|elt
+Data Modeling,Data Transformation,data modell?ing|datamodeller(ing)?
+Airflow,Orchestration,airflow
+Spark,Big Data,spark|pyspark
+Hadoop,Big Data,hadoop
+Kafka,Streaming,kafka
+AWS,Cloud,aws|amazon web services
+Azure,Cloud,azure
+GCP,Cloud,gcp|google cloud
+Docker,DevOps,docker
+Kubernetes,DevOps,kubernetes|k8s
+Terraform,DevOps,terraform
+Jenkins,DevOps,jenkins
+Linux,DevOps,linux
+Git,DevOps,git|github|gitlab
+Pandas,Python Library,pandas
+NumPy,Python Library,numpy
+Scikit-learn,Machine Learning,scikit-learn|sklearn
+TensorFlow,Machine Learning,tensorflow
+PyTorch,Machine Learning,pytorch
+Machine Learning,Machine Learning,machine learning|ml|maskininlärning
+Deep Learning,Machine Learning,deep learning
+NLP,Machine Learning,nlp|natural language processing
+LLM / GenAI,Machine Learning,llms?|generative ai|genai
+Statistics,Machine Learning,statistics|statistical|statistik
+React,Web Development,react(\.?js)?
+Node.js,Web Development,node(\.?js)?
+HTML/CSS,Web Development,html5?|css3?
+REST APIs,Web Development,rest(ful)? apis?
+Spring Boot,Backend Framework,spring ?boot
+Django,Backend Framework,django
+Flask,Backend Framework,flask
+FastAPI,Backend Framework,fastapi
+MySQL,Database,mysql
+PostgreSQL,Database,postgres(ql)?
+MongoDB,Database,mongo(db)?
+Selenium,Testing,selenium
+Jira,Testing,jira
+Agile,Ways of Working,agile|scrum|agilt?|agila
+Communication,Soft Skill,communication|kommunikativ|kommunikationsförmåga
+Problem Solving,Soft Skill,problem[- ]solving|problemlösning|problemlösande
+C#,Programming Language,c#
+.NET,Backend Framework,(asp)?\.net( core)?|dotnet
+Kotlin,Programming Language,kotlin
+Embedded Systems,Embedded,embedded|inbyggda system|firmware
+Cyber Security,Security,cyber ?security|cybersäkerhet|informationssäkerhet|it-säkerhet
+Networking,Infrastructure,nätverk|networking|tcp/ip|cisco
+Windows Server,Infrastructure,windows server
+Microsoft 365,Infrastructure,microsoft 365|m365|office 365
+ITIL,Ways of Working,itil
+Project Management,Ways of Working,projektledning|project management
+UX Design,Design,ux|user experience|användarupplevelse
+Figma,Design,figma
+SAP,Enterprise Software,sap
+Dynamics 365,Enterprise Software,dynamics 365|d365
+Microsoft Fabric,Data Platform,microsoft fabric|ms fabric
+Swedish (language),Language,flytande svenska|svenska i tal och skrift|god svenska|goda kunskaper i svenska|fluent in swedish|swedish speaking|speak swedish
