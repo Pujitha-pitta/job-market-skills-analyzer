@@ -10,10 +10,12 @@ Two data sources, switchable in the dashboard:
 - **🌍 Sample data** — 12,000 synthetic postings across 8 countries (India, Sweden, Norway,
   Denmark, Germany, Netherlands, UK, US) with salaries, for country and salary comparisons.
 
-<!-- Screenshots: save them in docs/ and uncomment
-![Learning path](docs/learning_path.png)
-![Jobs that match you](docs/jobs_match.png)
--->
+**🔗 Live dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/
+— rebuilt every morning by the daily refresh.
+
+| Your learning path | Jobs that match you |
+|---|---|
+| ![Learning path: pick what you know, get the next 3 skills to learn](docs/learning_path.png) | ![Jobs that match you: real Swedish ads ranked by how well your skills fit](docs/jobs_match.png) |
 
 Job postings are loaded into Snowflake, cleaned and modelled with dbt, and every
 skill mentioned in each job description is extracted. The result answers the
@@ -207,6 +209,7 @@ job-market-skills-analyzer/
    (*Settings → Secrets and variables → Actions*): `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PASSWORD`
    — use a **Programmatic Access Token** rather than your real password.
 4. Each run uses about a minute of the X-Small warehouse.
+5. The same workflow publishes the **dbt docs** to GitHub Pages (*Settings → Pages → Source: GitHub Actions*).
 
 ## 🤖 Optional: Cortex AI skill extraction
 `models/marts/ai/` asks an LLM inside Snowflake (`SNOWFLAKE.CORTEX.COMPLETE`, default `llama3.1-8b`) to list the
@@ -227,7 +230,7 @@ Off by default: it costs a few credits per run and needs Cortex in your account'
 - **Snapshots (SCD2)**: keep ads after they close, to build longer trends.
 - **Adzuna API** for real ads in other countries (free key required).
 - **Masking policy** on company names for a "privacy" demo.
-- Host the dbt docs: `dbt docs generate`, then publish `target/` (index.html, manifest.json, catalog.json) with GitHub Pages.
+- Host the Streamlit dashboard on Streamlit Community Cloud (with a read-only `REPORTER` login as its secret).
 
 ## 📝 Resume bullet points
 - Built an end-to-end ELT pipeline on **Snowflake** and **dbt** that ingests ~2,700 live Swedish job ads daily from a public REST API, identifying in-demand skills and trends by role and city.
