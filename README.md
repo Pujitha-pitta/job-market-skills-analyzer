@@ -10,9 +10,6 @@ Two data sources, switchable in the dashboard:
 - **🌍 Sample data** — 12,000 synthetic postings across 8 countries (India, Sweden, Norway,
   Denmark, Germany, Netherlands, UK, US) with salaries, for country and salary comparisons.
 
-**🚀 Live dashboard:** https://job-market-skills-analyzer.streamlit.app
-— real Swedish job ads, refreshed every morning.
-
 **📚 dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/dbt-docs/
 
 | Your learning path | Jobs that match you |
