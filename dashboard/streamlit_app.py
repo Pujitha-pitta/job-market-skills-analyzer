@@ -178,9 +178,28 @@ if not kpi["postings"]:
     st.warning("No postings match these filters. Try removing a filter.")
     st.stop()
 
+official = None
+if is_real:
+    # Swedish ads almost never publish pay, so use Statistics Sweden's official salaries
+    try:
+        official_df = run_query(f"select * from {MARTS}.mart_official_salary where role_family = ?", (role,))
+        official = None if official_df.empty else official_df.iloc[0]
+    except Exception:
+        official = None
+
+
+def kr(v):
+    return "n/a" if v is None or pd.isna(v) else f"{int(v):,} kr".replace(",", " ")
+
+
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Job postings", f"{int(kpi['postings']):,}")
-if is_real and pd.isna(kpi["median_salary"]):
+if official is not None:
+    c2.metric("Median salary", f"{kr(official['median_monthly_sek'])} / month",
+              help=f"Official median monthly salary in Sweden for “{official['occupation']}” "
+                   f"(SSYK {official['ssyk_code']}), Statistics Sweden (SCB) {int(official['year'])}. "
+                   "Swedish job ads almost never state the pay, so official statistics are used.")
+elif is_real:
     c2.metric("Median salary", "Not published",
               help="Swedish job ads almost never state the pay ('Lön enligt överenskommelse'). "
                    "Switch to Sample data to explore salaries.")
@@ -188,7 +207,16 @@ else:
     c2.metric("Median salary", fmt_salary(kpi["median_salary"], currency, shown_as),
               help="Midpoint of the advertised range. 'All countries' is converted to EUR at fixed rates.")
 c3.metric("Avg skills asked per job", f"{float(kpi['avg_skills']):.1f}")
-c4.metric("Postings showing salary", f"{float(kpi['pct_salary_disclosed']):.0%}")
+if official is not None:
+    c4.metric("Typical salary range",
+              f"{int(official['p25_monthly_sek']) // 1000}–{int(official['p75_monthly_sek']) // 1000}k kr",
+              help="Middle half of salaries (25th–75th percentile) per month, SCB "
+                   f"{int(official['year'])}. Only {float(kpi['pct_salary_disclosed']):.0%} of these ads publish pay.")
+else:
+    c4.metric("Postings showing salary", f"{float(kpi['pct_salary_disclosed']):.0%}")
+if official is not None:
+    st.caption(f"💰 Salaries: official statistics from Statistics Sweden (SCB, {int(official['year'])}) "
+               f"for “{official['occupation']}” — Swedish job ads rarely publish pay.")
 
 # --------------------------------------------------------------------------
 # Shared data: skill demand (for these filters) + salary premium (country + role)
@@ -383,9 +411,25 @@ with right:
     st.subheader("Which skills pay more?")
     st.caption(f"Avg salary of postings with the skill vs. without it (same role, {'all countries, in EUR' if country == ALL else country}).")
     if is_real:
+        if official is not None:
+            st.markdown(f"**What does a {role} earn in Sweden?** Monthly salary, SCB {int(official['year'])}.")
+            levels = [("10% earn less than", "p10_monthly_sek"), ("25% earn less than", "p25_monthly_sek"),
+                      ("Median", "median_monthly_sek"), ("25% earn more than", "p75_monthly_sek"),
+                      ("10% earn more than", "p90_monthly_sek")]
+            spread = pd.DataFrame([(label, official[col]) for label, col in levels if pd.notna(official[col])],
+                                  columns=["level", "sek"])
+            spread["sek"] = spread["sek"].astype(float)
+            st.altair_chart(
+                alt.Chart(spread).mark_bar().encode(
+                    x=alt.X("sek:Q", title="kr / month", axis=alt.Axis(format=",.0f")),
+                    y=alt.Y("level:N", sort=None, title=None),
+                    tooltip=["level", alt.Tooltip("sek:Q", format=",.0f", title="kr / month")],
+                ).properties(height=200),
+                width="stretch",
+            )
         st.info("Swedish job ads almost never publish the salary — employers write "
-                "*“Lön enligt överenskommelse”* (salary by agreement) instead. "
-                "Switch to **Sample data** in the sidebar to explore salary premiums.")
+                "*“Lön enligt överenskommelse”* (salary by agreement) — so skill premiums can't be "
+                "measured from real ads. Switch to **Sample data** in the sidebar to explore them.")
     elif premium.empty:
         st.info("Not enough salary data for this role here. Try 'All countries'.")
     else:

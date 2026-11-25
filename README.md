@@ -13,7 +13,7 @@ Two data sources, switchable in the dashboard:
 **🚀 Live dashboard:** https://job-market-skills-analyzer.streamlit.app
 — real Swedish job ads, refreshed every morning.
 
-**📚 dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/
+**📚 dbt docs (models, tests, lineage graph):** https://pujitha-pitta.github.io/job-market-skills-analyzer/dbt-docs/
 
 | Your learning path | Jobs that match you |
 |---|---|
@@ -197,7 +197,10 @@ job-market-skills-analyzer/
 - Every real row has `data_source = 'Real'`; sample rows are `'Sample'`. All marts keep them apart, so
   real and synthetic numbers never mix.
 - **Salaries:** Swedish ads almost never publish pay ("Lön enligt överenskommelse"), so real mode shows
-  demand, trends, cities and job matching, and points to sample data for salary questions.
+  **official salaries from Statistics Sweden (SCB)** — median and 10th–90th percentiles per occupation
+  (`seeds/scb_salaries.csv`, mapped to roles in `seeds/role_occupation.csv`, model `mart_official_salary`).
+  SCB publishes yearly; refresh with `python ingestion/fetch_scb_salaries.py`. Skill salary premiums
+  still need the sample data.
 - Many ads are in Swedish, so the skill dictionary and role rules include Swedish wording
   (e.g. *maskininlärning*, *flytande svenska*, *systemutvecklare*).
 
@@ -211,7 +214,7 @@ job-market-skills-analyzer/
    (*Settings → Secrets and variables → Actions*): `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PASSWORD`
    — use a **Programmatic Access Token** rather than your real password.
 4. Each run uses about a minute of the X-Small warehouse.
-5. The same workflow publishes the **dbt docs** to GitHub Pages (*Settings → Pages → Source: GitHub Actions*).
+5. The same workflow publishes GitHub Pages (*Settings → Pages → Source: GitHub Actions*): the home page forwards to the live dashboard, and the dbt docs are at `/dbt-docs/`.
 
 ## 🤖 Optional: Cortex AI skill extraction
 `models/marts/ai/` asks an LLM inside Snowflake (Cortex `AI_COMPLETE`, default `llama3.1-8b`) to list the

@@ -48,3 +48,27 @@ seeds:
           - accepted_values:
               arguments:
                 values: ['LPA', 'month', 'year']
+
+  - name: scb_salaries
+    description: >
+      Official monthly salaries in Sweden (SEK, all sectors, men + women) from
+      Statistics Sweden (SCB) table AM0110A/LoneSpridSektYrk4AN, per SSYK 2012
+      occupation. Refresh yearly with `python ingestion/fetch_scb_salaries.py`.
+    columns:
+      - name: ssyk_code
+        data_tests: [unique, not_null]
+      - name: median_monthly_sek
+        data_tests: [not_null]
+
+  - name: role_occupation
+    description: Maps each role family to the SCB occupation (SSYK 2012 code) used for its official salary.
+    columns:
+      - name: role_family
+        data_tests: [unique, not_null]
+      - name: ssyk_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('scb_salaries')
+                field: ssyk_code

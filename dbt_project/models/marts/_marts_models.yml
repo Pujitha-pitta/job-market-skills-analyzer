@@ -91,3 +91,14 @@ models:
       - unique_combination:
           arguments:
             columns: [data_source, country, city, role_family]
+
+  - name: mart_official_salary
+    description: >
+      Official Swedish monthly salary (SCB) per role — median, average and
+      percentiles — shown for real Swedish ads, which rarely publish pay.
+      'All Roles' weights the occupations by the number of live ads.
+    columns:
+      - name: role_family
+        data_tests: [unique, not_null]
+      - name: median_monthly_sek
+        data_tests: [not_null]

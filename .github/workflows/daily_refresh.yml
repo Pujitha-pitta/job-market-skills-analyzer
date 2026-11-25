@@ -54,8 +54,9 @@ jobs:
           DBT_ENGINE_MANAGE_STATE: "false"
         run: |
           python run_dbt.py docs generate --static
-          mkdir -p ../site
-          cp target/static_index.html ../site/index.html
+          mkdir -p ../site/dbt-docs
+          cp ../pages/index.html ../site/index.html                 # home -> live Streamlit dashboard
+          cp target/static_index.html ../site/dbt-docs/index.html   # dbt docs at /dbt-docs/
 
       - uses: actions/upload-pages-artifact@v3
         with:

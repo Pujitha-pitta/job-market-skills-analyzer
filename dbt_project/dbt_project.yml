@@ -48,3 +48,18 @@ seeds:
         currency: varchar
         eur_per_unit: number(12, 6)
         salary_shown_as: varchar
+    scb_salaries:
+      +column_types:
+        ssyk_code: varchar
+        occupation: varchar
+        year: integer
+        avg_monthly_sek: integer
+        median_monthly_sek: integer
+        p10_monthly_sek: integer
+        p25_monthly_sek: integer
+        p75_monthly_sek: integer
+        p90_monthly_sek: integer
+    role_occupation:
+      +column_types:
+        role_family: varchar
+        ssyk_code: varchar
